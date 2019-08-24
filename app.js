@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-
+//test
   const form = document.getElementById('registrar');
   const input = form.querySelector('input');
 
