@@ -1,0 +1,8 @@
+docker start [application name] //starts application/container
+
+docker ps -a //shows all installed containers
+
+docker logs -f [application name] //gives info logged from the given container,
+ -f makes it so it will continue to log after the command is run
+
+docker stop [application name] //stops application/container
