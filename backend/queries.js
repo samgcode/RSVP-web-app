@@ -19,9 +19,9 @@ const getInvitees = (request, response) => {
 
 //get invitee by name
 const getInviteeByName = (request, response) => {
-  const name = parseString(request.params.name);
+  const name = request.params.name;
 
-  pool.query('SELECT * FROM invitees WHERE id = $1', [name], (error, results) => {
+  pool.query('SELECT * FROM invitees WHERE name = $1', [name], (error, results) => {
     if(error) {
       throw error;
     }
@@ -55,7 +55,7 @@ const addInvitee = (request, response) => {
 
 //edit invitee by name
 const editInvitee = (request, response) => {
-  const nameInput = parseString(request.params.name);
+  const nameInput = request.params.name;
   const { name, confirmed } = request.body;
 
   pool.query(
@@ -72,7 +72,14 @@ const editInvitee = (request, response) => {
 
 //remove invitee
 
-
+//export functions
+module.exports = {
+  getInvitees,
+  getInviteeByName,
+  getInviteesByHasConfirmed,
+  addInvitee,
+  editInvitee,
+}
 
 
 
