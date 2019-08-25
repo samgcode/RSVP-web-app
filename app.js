@@ -18,6 +18,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   mainDiv.insertBefore(div, ul);
 
+  // 1. Create a new XMLHttpRequest object
+  let xhr = new XMLHttpRequest();
+
+  // 2. Configure it: GET-request for the URL /article/.../load
+  xhr.open('GET', '/invitees');
+
+  // 3. Send the request over the network
+  xhr.send();
+
   filterCheckBox.addEventListener('change', (e) => {
     const isChecked = e.target.checked;
     const lis = ul.children;

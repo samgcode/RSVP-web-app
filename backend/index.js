@@ -18,9 +18,8 @@ app.get('/', (request, response) => {
 app.post('/invitees', queries.addInvitee);
 app.get('/invitees', queries.getInvitees);
 app.get('/invitees/:name', queries.getInviteeByName);
-app.get('/invitees/:hasConfirmed', queries.getInviteesByHasConfirmed);
 app.put('/invitees/:name', queries.editInvitee);
-//app.delete('/invitees/:name', queries.removeInvitee);
+app.delete('/invitees/:name', queries.removeInvitee);
 
 app.listen(port, () => {
   console.log(`App running on port ${port}.`);

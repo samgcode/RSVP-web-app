@@ -31,8 +31,8 @@ const getInviteeByName = (request, response) => {
 
 //get invitees by has confirmed
 const getInviteesByHasConfirmed = (request, response) => {
-  const confirmed = parseInt(request.params.confirmed);
-
+  const confirmed = 1;
+  console.log('test');
   pool.query('SELECT * FROM invitees WHERE confirmed = $1', [confirmed], (error, results) => {
     if(error) {
       throw error;
@@ -71,6 +71,16 @@ const editInvitee = (request, response) => {
 }
 
 //remove invitee
+const removeInvitee = (request, response) => {
+  const name = request.params.name;
+
+  pool.query('DELETE FROM invitees WHERE name = $1', [name], (error, response) => {
+    if(error) {
+      throw error;
+    }
+    response.status(200).send(`Invitee removed with name ${name}`);
+  });
+}
 
 //export functions
 module.exports = {
@@ -79,6 +89,7 @@ module.exports = {
   getInviteesByHasConfirmed,
   addInvitee,
   editInvitee,
+  removeInvitee,
 }
 
 
