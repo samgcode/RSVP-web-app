@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let xhr = new XMLHttpRequest();
 
   // 2. Configure it: GET-request for the URL /article/.../load
-  xhr.open('GET', '/invitees');
+  xhr.open('GET', '/localhost:3000/invitees');
 
   // 3. Send the request over the network
   xhr.send();
