@@ -74,12 +74,14 @@ const editInvitee = (request, response) => {
 const removeInvitee = (request, response) => {
   const name = request.params.name;
 
-  pool.query('DELETE FROM invitees WHERE name = $1', [name], (error, response) => {
+  pool.query(
+    'DELETE FROM invitees WHERE name = $1', [name], (error, results) => {
     if(error) {
       throw error;
     }
     response.status(200).send(`Invitee removed with name ${name}`);
-  });
+    }
+  );
 }
 
 //export functions
