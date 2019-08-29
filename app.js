@@ -89,7 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const label = li.childNodes[1];
     const checkBox = label.firstElementChild;
-    console.log('checkBox:', checkBox);
 
     confirmed = (checkBox.checked ? 1 : 0);
 
@@ -104,6 +103,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
         li.insertBefore(span, input);
         li.removeChild(input);
+      };
+    }
+  }
+
+  function editCofirmedAsync(name, checkBox) {
+    xhr.open('PUT', `http://localhost:3000/invitees/${name}`);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    confirmed = (checkBox.checked ? 1 : 0);
+
+    xhr.send(`name=${name}&confirmed=${confirmed}`);
+
+    xhr.onload = function() {
+      if (xhr.status != 200) { // analyze HTTP status of the response
+        alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
+      } else { // show the result
+        const checked = checkBox.checked;
+        const li = checkBox.parentNode.parentNode;
+
+        if(checked) {
+          li.className = 'responded';
+        } else {
+          li.className = '';
+        }
       };
     }
   }
@@ -194,14 +217,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ul.addEventListener('change', (e) => {
     const checkBox = e.target;
-    const checked = checkBox.checked;
-    const listItem = checkBox.parentNode.parentNode;
+    const li = checkBox.parentNode.parentNode;
+    const span = li.firstElementChild;
 
-    if(checked) {
-      listItem.className = 'responded';
-    } else {
-      listItem.className = '';
-    }
+    editCofirmedAsync(span.textContent, checkBox)
   });
 
   let name = '';
