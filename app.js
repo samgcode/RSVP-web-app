@@ -18,12 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   mainDiv.insertBefore(div, ul);
 
+  // 1. Create a new XMLHttpRequest object
+  let xhr = new XMLHttpRequest();
+
   loadInviteesAsync();
 
   function loadInviteesAsync() {
-
-    // 1. Create a new XMLHttpRequest object
-    let xhr = new XMLHttpRequest();
 
     // 2. Configure it: GET-request for the URL /article/.../load
     xhr.open('GET', 'http://localhost:3000/invitees');
@@ -51,9 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function removeInviteeAsync(li) {
     const name = li.firstElementChild.textContent;
 
-    // 1. Create a new XMLHttpRequest object
-    let xhr = new XMLHttpRequest();
-
     xhr.open('DELETE', `http://localhost:3000/invitees/${name}`);
 
     xhr.send();
@@ -68,24 +65,49 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function addInvitee(name) {
-    // 1. Create a new XMLHttpRequest object
-    let xhr = new XMLHttpRequest();
-    //let formData = new FormData(name, confimed);
 
     xhr.open('POST', `http://localhost:3000/invitees/`);
-    //formData.append(name, 0);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
     xhr.send(`name=${name}&confirmed=0`);
 
     xhr.onload = function() {
       if (xhr.status != 201) { // analyze HTTP status of the response
         alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
       } else { // show the result
-
+        const li = createLI(name);
+        ul.appendChild(li);
       };
     }
   }
+
+  function editNameAsync(name, li) {
+    xhr.open('PUT', `http://localhost:3000/invitees/${name}`);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    const input = li.firstElementChild;
+    const newName = input.value;
+
+    const label = li.childNodes[1];
+    const checkBox = label.firstElementChild;
+    console.log('checkBox:', checkBox);
+
+    confirmed = (checkBox.checked ? 1 : 0);
+
+    xhr.send(`name=${newName}&confirmed=${confirmed}`);
+
+    xhr.onload = function() {
+      if (xhr.status != 200) { // analyze HTTP status of the response
+        alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
+      } else { // show the result
+        const span = document.createElement('span');
+        span.textContent = input.value;
+
+        li.insertBefore(span, input);
+        li.removeChild(input);
+      };
+    }
+  }
+
 
   function loadInvitee(name, confirmed) {
     //console.log('createLI', text);
@@ -168,9 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const text = input.value;
     input.value = '';
     addInvitee(text);
-    const li = createLI(text);
-
-    ul.appendChild(li);
   });
 
   ul.addEventListener('change', (e) => {
@@ -185,30 +204,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  let name = '';
+
   ul.addEventListener('click', (e) => {
     if(e.target.tagName === 'BUTTON') {
       const button = e.target;
       const li = button.parentNode;
       const action = button.textContent;
       const nameActions = {
-        remove:  () => {
+        remove: () => {
           removeInviteeAsync(li);
         },
         edit: () => {
           const span = li.firstElementChild;
           const input = document.createElement('input');
           input.type = 'text';
+          name = span.textContent;
           input.value = span.textContent;
           li.insertBefore(input, span);
           li.removeChild(span);
           button.textContent = 'save';
         },
         save: () => {
-          const input = li.firstElementChild;
-          const span = document.createElement('span');
-          span.textContent = input.value;
-          li.insertBefore(span, input);
-          li.removeChild(input);
+          editNameAsync(name, li);
           button.textContent = 'edit';
         }
       };
@@ -217,3 +235,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+//
